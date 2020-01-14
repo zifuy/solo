@@ -34,7 +34,7 @@ node(label) {
       throw(exc)
     }
   }
-  stage('构建 Docker 镜像') {
+  stage('构建 Docker test 镜像') {
     withCredentials([[$class: 'UsernamePasswordMultiBinding',
       credentialsId: 'dockerhbr',
       usernameVariable: 'DOCKER_HUB_USER',
@@ -44,13 +44,41 @@ node(label) {
           sh """
             docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
             docker build --target test -t ${image}:${imageTag1} .
-            docker build --target dev -t ${image}:${imageTag2} .
-            docker build --target prod -t ${image}:${imageTag3} .
             docker push ${image}:${imageTag1}
-            docker push ${image}:${imageTag2}
-            docker push ${image}:${imageTag3}
             docker rmi -f ${image}:${imageTag1}
+            #sleep 3600
+            """
+        }
+    }
+  }
+    stage('构建 Docker dev 镜像') {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding',
+      credentialsId: 'dockerhbr',
+      usernameVariable: 'DOCKER_HUB_USER',
+      passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+        container('docker') {
+          echo "3. 构建 Docker 镜像阶段"
+          sh """
+            docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
+            docker build --target dev -t ${image}:${imageTag2} .
+            docker push ${image}:${imageTag2}
             docker rmi -f ${image}:${imageTag2}
+            #sleep 3600
+            """
+        }
+    }
+  }
+    stage('构建 Docker prod 镜像') {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding',
+      credentialsId: 'dockerhbr',
+      usernameVariable: 'DOCKER_HUB_USER',
+      passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+        container('docker') {
+          echo "3. 构建 Docker 镜像阶段"
+          sh """
+            docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
+            docker build --target prod -t ${image}:${imageTag3} .
+            docker push ${image}:${imageTag3}
             docker rmi -f ${image}:${imageTag3}
             #sleep 3600
             """
