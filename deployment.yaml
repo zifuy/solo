@@ -20,7 +20,7 @@ spec:
         run: solo
     spec:
       containers:
-      - image: hbr.hf.cn/test/solo:v1.3
+      - image: hbr.zifuy.cn/test/solo:v1.3
         name: solo
         env:
         - name: JDBC_USERNAME
