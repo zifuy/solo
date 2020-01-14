@@ -16,6 +16,8 @@ node(label) {
   def gitCommit = myRepo.GIT_COMMIT
   def gitBranch = myRepo.GIT_BRANCH
 
+  def imageTag = "v1.1"
+  def imageTag = "v1.2"
   def imageTag = "v1.3"
   def dockerRegistryUrl = "hbr.zifuy.cn"
   def imageEndpoint = "test/solo"
@@ -41,9 +43,15 @@ node(label) {
           echo "3. 构建 Docker 镜像阶段"
           sh """
             docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-            docker build -t ${image}:${imageTag} .
-            docker push ${image}:${imageTag}
-            docker rmi -f ${image}:${imageTag}
+            docker build --target test -t ${image}:${imageTag1} .
+            docker build --target dev -t ${image}:${imageTag2} .
+            docker build --target prod -t ${image}:${imageTag3} .
+            docker push ${image}:${imageTag1}
+            docker push ${image}:${imageTag2}
+            docker push ${image}:${imageTag3}
+            docker rmi -f ${image}:${imageTag1}
+            docker rmi -f ${image}:${imageTag2}
+            docker rmi -f ${image}:${imageTag3}
             #sleep 3600
             """
         }
