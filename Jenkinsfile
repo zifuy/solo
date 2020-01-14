@@ -17,7 +17,7 @@ node(label) {
   def gitBranch = myRepo.GIT_BRANCH
 
   def imageTag = "v1.3"
-  def dockerRegistryUrl = "hbr.hf.cn"
+  def dockerRegistryUrl = "hbr.zifuy.cn"
   def imageEndpoint = "test/solo"
   def image = "${dockerRegistryUrl}/${imageEndpoint}"
 
