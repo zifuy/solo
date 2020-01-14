@@ -16,9 +16,9 @@ node(label) {
   def gitCommit = myRepo.GIT_COMMIT
   def gitBranch = myRepo.GIT_BRANCH
 
-  def imageTag = "v1.1"
-  def imageTag = "v1.2"
-  def imageTag = "v1.3"
+  def imageTag1 = "v1.1"
+  def imageTag2 = "v1.2"
+  def imageTag3 = "v1.3"
   def dockerRegistryUrl = "hbr.zifuy.cn"
   def imageEndpoint = "test/solo"
   def image = "${dockerRegistryUrl}/${imageEndpoint}"
