@@ -17,17 +17,16 @@
  */
 package org.b3log.solo.processor;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.http.renderer.AbstractFreeMarkerRenderer;
 import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
@@ -50,16 +49,16 @@ import java.util.Map;
  * Category processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Mar 30, 2019
+ * @version 2.0.0.1, Feb 27, 2020
  * @since 2.0.0
  */
-@RequestProcessor
+@Singleton
 public class CategoryProcessor {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CategoryProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(CategoryProcessor.class);
 
     /**
      * DataModelService.
@@ -108,7 +107,6 @@ public class CategoryProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/articles/category/{categoryURI}", method = HttpMethod.GET)
     public void getCategoryArticlesByPage(final RequestContext context) {
         final JSONObject jsonObject = new JSONObject();
 
@@ -156,7 +154,6 @@ public class CategoryProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/category/{categoryURI}", method = HttpMethod.GET)
     public void showCategoryArticles(final RequestContext context) {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(context, "category-articles.ftl");
         final Map<String, Object> dataModel = renderer.getDataModel();
@@ -164,10 +161,9 @@ public class CategoryProcessor {
         final Response response = context.getResponse();
 
         try {
-            String categoryURI = context.pathVar("categoryURI");
-            categoryURI = URLs.encode(categoryURI);
+            final String categoryURI = context.pathVar("categoryURI");
             final int currentPageNum = Paginator.getPage(context);
-            LOGGER.log(Level.DEBUG, "Category [URI={0}, currentPageNum={1}]", categoryURI, currentPageNum);
+            LOGGER.log(Level.DEBUG, "Category [URI={}, currentPageNum={}]", categoryURI, currentPageNum);
             final JSONObject category = categoryQueryService.getByURI(categoryURI);
             if (null == category) {
                 context.sendError(404);

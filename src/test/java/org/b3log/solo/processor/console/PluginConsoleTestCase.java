@@ -35,19 +35,10 @@ import org.testng.annotations.Test;
 public class PluginConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * getPlugins.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getPlugins() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/plugins/1/10/20");

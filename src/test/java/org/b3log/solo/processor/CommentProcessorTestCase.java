@@ -45,19 +45,10 @@ import org.testng.annotations.Test;
 public class CommentProcessorTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * addArticleComment.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addArticleComment() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/article/comments");

@@ -20,7 +20,7 @@
 <div class="article-list fn-clear">
     <#list articles as article>
     <div>
-        <img src="${article.articleImg1URL}"/>
+        <img src="${article.articleImg1URL}" alt="${article.articleTitle}"/>
         <div class="article-abstract article-image">
             <div class="fn-clear">
                 <div class="article-date" data-ico="&#xe200;">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="fn-right">
                     <#if commentable>
-                    <a rel="nofollow" data-ico="&#xe14e;" href="${servePath}${article.articlePermalink}#comments">
+                    <a rel="nofollow" data-ico="&#xe14e;" data-uvstatcmt="${article.oId}" href="${servePath}${article.articlePermalink}#b3logsolocomments">
                         ${article.articleCommentCount}
                     </a>
                     </#if>

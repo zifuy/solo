@@ -1,0 +1,12 @@
+test:
+    script:
+      - pwd
+      - hostname
+      - "mvn clean package"
+build_image:
+    script:
+      - docker build -t hbr.zifuy.cn/test/solo:4.0 .
+    only:
+      - dev
+    tags:
+      - solo-dev-runner

@@ -30,19 +30,10 @@ import org.testng.annotations.Test;
 public class TagMgmtServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Remove Unused Tags.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void removeUnusedTags() throws Exception {
         final TagMgmtService tagMgmtService = getTagMgmtService();
 

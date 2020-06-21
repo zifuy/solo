@@ -40,19 +40,10 @@ import org.testng.annotations.Test;
 public class LinkConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * addLink.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addLink() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/link/");

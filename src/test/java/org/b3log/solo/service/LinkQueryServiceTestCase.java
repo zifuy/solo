@@ -34,19 +34,10 @@ import org.testng.annotations.Test;
 public class LinkQueryServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Add Link.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addLink() throws Exception {
         final LinkMgmtService linkMgmtService = getLinkMgmtService();
 

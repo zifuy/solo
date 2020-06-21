@@ -17,9 +17,10 @@
  */
 package org.b3log.solo.service;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.solo.Server;
 import org.b3log.solo.model.Option;
@@ -30,7 +31,7 @@ import org.json.JSONObject;
  * Upgrade service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.15, Jan 13, 2020
+ * @version 1.2.1.18, Mar 24, 2020
  * @since 1.2.0
  */
 @Service
@@ -39,7 +40,7 @@ public class UpgradeService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UpgradeService.class);
+    private static final Logger LOGGER = LogManager.getLogger(UpgradeService.class);
 
     /**
      * Option Query Service.
@@ -97,6 +98,12 @@ public class UpgradeService {
                     V367_368.perform();
                 case "3.6.8":
                     V368_370.perform();
+                case "3.7.0":
+                    V370_380.perform();
+                case "3.8.0":
+                    V380_390.perform();
+                case "3.9.0":
+                    V390_400.perform();
 
                     break;
                 default:

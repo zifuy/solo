@@ -17,15 +17,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -->
-<script src="https://cdn.jsdelivr.net/npm/uvstat@v1.0.4/dist/index.min.js"></script>
 <script>
-    var Label = {
-        servePath: "${servePath}",
-        staticServePath: "${staticServePath}",
-        luteAvailable: ${luteAvailable?c},
-        hljsStyle: '${hljsTheme}',
-        langLabel: "${langLabel}",
-        version: "${version}",
-    }
-    Util.init()
+  var Label = {
+    servePath: "${servePath}",
+    staticServePath: "${staticServePath}",
+    luteAvailable: ${luteAvailable?c},
+    hljsStyle: '${hljsTheme}',
+    langLabel: "${langLabel}",
+    version: "${version}",
+    staticSite: ${staticSite?c},
+    showCodeBlockLn: ${showCodeBlockLn},
+  }
 </script>

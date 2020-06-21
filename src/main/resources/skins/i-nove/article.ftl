@@ -62,9 +62,9 @@
                                     </div>
                                     <#if commentable>
                                     <div class="right">
-                                        <a rel="nofollow" href="${servePath}${article.articlePermalink}#comments" class="left">
+                                        <a rel="nofollow" href="${servePath}${article.articlePermalink}#b3logsolocomments" class="left">
                                             <span class="left articles-commentIcon" title="${commentLabel}"></span>
-                                            ${article.articleCommentCount}
+                                            <span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span>
                                         </a>
                                     </div>
                                     </#if>
@@ -112,7 +112,17 @@
                                 <div id="randomArticles" class="article-relative"></div>
                                 <div id="externalRelevantArticles" class="article-relative"></div>
                             </div>
-                            <@comments commentList=articleComments article=article></@comments>
+                            <#if commentable>
+                                <div id="b3logsolocomments"></div>
+                                <div id="vcomment" class="comments"
+                                 style="padding-top: 15px"
+                                 data-name="${article.authorName}" data-postId="${article.oId}"></div>
+                                <#if !staticSite>
+                                <div id="soloComments" style="display: none;">
+                                    <@comments commentList=articleComments article=article></@comments>
+                                </div>
+                                </#if>
+                            </#if>
                         </div>
                         <div class="right">
                             <#include "side.ftl">

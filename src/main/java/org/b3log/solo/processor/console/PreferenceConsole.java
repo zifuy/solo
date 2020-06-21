@@ -17,14 +17,14 @@
  */
 package org.b3log.solo.processor.console;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.Before;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.solo.model.Option;
@@ -39,18 +39,17 @@ import org.json.JSONObject;
  * Preference console request processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://github.com/hzchendou">hzchendou</a>
- * @version 1.2.0.25, Jun 13, 2019
+ * @author <a href="https://hacpai.com/member/hzchendou">hzchendou</a>
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.0
  */
-@RequestProcessor
-@Before(ConsoleAdminAuthAdvice.class)
+@Singleton
 public class PreferenceConsole {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PreferenceConsole.class);
+    private static final Logger LOGGER = LogManager.getLogger(PreferenceConsole.class);
 
     /**
      * Preference management service.
@@ -242,7 +241,14 @@ public class PreferenceConsole {
      *         "faviconURL": "",
      *         "syncGitHub": boolean,
      *         "pullGitHub": boolean,
-     *         "customVars" "", // 支持配置自定义参数 https://github.com/b3log/solo/issues/12535
+     *         "customVars": "", // 支持配置自定义参数 https://github.com/b3log/solo/issues/12535
+     *         "showCodeBlockLn": boolean, // 支持代码块行号显示 https://github.com/88250/solo/issues/4
+     *         "footnotes": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
+     *         "showToC": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
+     *         "autoSpace": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
+     *         "fixTermTypo": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
+     *         "chinesePunct": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
+     *         "inlineMathAllowDigitAfterOpenMarker": boolean, // Markdown 支持改进 https://github.com/88250/solo/issues/54
      *     }
      * }
      * </pre>

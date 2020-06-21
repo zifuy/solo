@@ -19,16 +19,15 @@ package org.b3log.solo.processor;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
 import org.b3log.solo.Server;
@@ -39,21 +38,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Blog processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.0.2, Nov 15, 2019
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.6
  */
-@RequestProcessor
+@Singleton
 public class BlogProcessor {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(BlogProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(BlogProcessor.class);
 
     /**
      * Article query service.
@@ -92,7 +92,7 @@ public class BlogProcessor {
 
     static {
         try (final InputStream tplStream = BlogProcessor.class.getResourceAsStream("/manifest.json.tpl")) {
-            PWA_MANIFESTO_JSON = IOUtils.toString(tplStream, "UTF-8");
+            PWA_MANIFESTO_JSON = IOUtils.toString(tplStream, StandardCharsets.UTF_8);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Loads PWA manifest.json template failed", e);
         }
@@ -103,7 +103,6 @@ public class BlogProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/manifest.json", method = HttpMethod.GET)
     public void getPWAManifestJSON(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         renderer.setPretty(true);
@@ -141,7 +140,6 @@ public class BlogProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/blog/info", method = HttpMethod.GET)
     public void getBlogInfo(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);
@@ -151,7 +149,6 @@ public class BlogProcessor {
         jsonObject.put("recentArticleTime", articleQueryService.getRecentArticleTime());
         final JSONObject statistic = statisticQueryService.getStatistic();
         jsonObject.put("articleCount", statistic.getLong(Option.ID_T_STATISTIC_PUBLISHED_ARTICLE_COUNT));
-        jsonObject.put("commentCount", statistic.getLong(Option.ID_T_STATISTIC_PUBLISHED_BLOG_COMMENT_COUNT));
         jsonObject.put("tagCount", tagQueryService.getTagCount());
         jsonObject.put("servePath", Latkes.getServePath());
         jsonObject.put("staticServePath", Latkes.getStaticServePath());
@@ -181,7 +178,6 @@ public class BlogProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/blog/articles-tags", method = HttpMethod.GET)
     public void getArticlesTags(final RequestContext context) {
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, 1);

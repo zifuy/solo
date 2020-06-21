@@ -17,15 +17,16 @@
  */
 package org.b3log.solo.event;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
 
 /**
- * This listener is responsible for updating article to B3log Rhythm. Sees <a href="https://hacpai.com/b3log">B3log 构思</a> for more details.
+ * This listener is responsible for updating article to B3log Rhythm. Sees <a href="https://hacpai.com/article/1546941897596">B3log 构思 - 分布式社区网络</a> for more details.
  * <p>
  * API spec: https://hacpai.com/article/1457158841475
  * </p>
@@ -40,11 +41,11 @@ public class B3ArticleUpdater extends AbstractEventListener<JSONObject> {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(B3ArticleUpdater.class);
+    private static final Logger LOGGER = LogManager.getLogger(B3ArticleUpdater.class);
 
     public void action(final Event<JSONObject> event) {
         final JSONObject data = event.getData();
-        LOGGER.log(Level.DEBUG, "Processing an event [type={0}, data={1}] in listener [className={2}]",
+        LOGGER.log(Level.DEBUG, "Processing an event [type={}, data={}] in listener [className={}]",
                 event.getType(), data, B3ArticleUpdater.class.getName());
 
         B3ArticleSender.pushArticleToRhy(data);

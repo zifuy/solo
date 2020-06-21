@@ -19,27 +19,25 @@ package org.b3log.solo.processor;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.util.Requests;
-import org.b3log.latke.util.URLs;
 import org.b3log.solo.model.UserExt;
 import org.b3log.solo.service.*;
 import org.b3log.solo.util.Solos;
 import org.json.JSONObject;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -50,21 +48,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.3, Jan 13, 2020
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 2.9.5
  */
-@RequestProcessor
+@Singleton
 public class OAuthProcessor {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(OAuthProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(OAuthProcessor.class);
 
     /**
-     * OAuth parameters - state.
+     * OAuth parameters - state &lt;state, redirectURL&gt;.
      */
-    private static final Set<String> STATES = ConcurrentHashMap.newKeySet();
+    private static final Map<String, String> STATES = new ConcurrentHashMap();
 
     /**
      * Option query service.
@@ -107,18 +105,17 @@ public class OAuthProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/login/redirect", method = HttpMethod.GET)
     public void redirectAuth(final RequestContext context) {
         String referer = context.param("referer");
         if (StringUtils.isBlank(referer)) {
             referer = Latkes.getServePath();
         }
 
-        String state = RandomStringUtils.randomAlphanumeric(16) + referer;
-        STATES.add(state);
+        String state = RandomStringUtils.randomAlphanumeric(16);
+        STATES.put(state, referer);
 
         final String loginAuthURL = "https://hacpai.com/login?goto=" + Latkes.getServePath() + "/login/callback";
-        final String path = loginAuthURL + "?state=" + URLs.encode(state);
+        final String path = loginAuthURL + "?state=" + state;
         context.sendRedirect(path);
     }
 
@@ -127,17 +124,15 @@ public class OAuthProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/login/callback", method = HttpMethod.GET)
     public synchronized void authCallback(final RequestContext context) {
         String state = context.param("state");
-        if (!STATES.contains(state)) {
+        final String referer = STATES.get(state);
+        if (null == referer) {
             context.sendError(400);
 
             return;
         }
         STATES.remove(state);
-        String referer = URLs.decode(state);
-        referer = StringUtils.substring(referer, 16);
 
         final Response response = context.getResponse();
         final Request request = context.getRequest();
@@ -173,7 +168,6 @@ public class OAuthProcessor {
                     }
                 } else {
                     user.put(UserExt.USER_GITHUB_ID, openId);
-                    user.put(User.USER_NAME, userName);
                     user.put(UserExt.USER_AVATAR, userAvatar);
                     try {
                         userMgmtService.updateUser(user);
@@ -208,6 +202,6 @@ public class OAuthProcessor {
 
         Solos.login(user, response);
         context.sendRedirect(referer);
-        LOGGER.log(Level.INFO, "Logged in [name={0}, remoteAddr={1}] with oauth", userName, Requests.getRemoteAddr(request));
+        LOGGER.log(Level.INFO, "Logged in [name={}, remoteAddr={}] with oauth", userName, Requests.getRemoteAddr(request));
     }
 }

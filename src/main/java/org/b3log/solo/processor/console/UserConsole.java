@@ -18,15 +18,15 @@
 package org.b3log.solo.processor.console;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.Before;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
@@ -41,16 +41,16 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @version 1.2.1.7, Mar 29, 2019
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.0
  */
-@RequestProcessor
+@Singleton
 public class UserConsole {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UserConsole.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserConsole.class);
 
     /**
      * User query service.
@@ -98,7 +98,6 @@ public class UserConsole {
      *
      * @param context the specified request context
      */
-    @Before(ConsoleAdminAuthAdvice.class)
     public void updateUser(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);
@@ -134,7 +133,6 @@ public class UserConsole {
      *
      * @param context the specified request context
      */
-    @Before(ConsoleAdminAuthAdvice.class)
     public void removeUser(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);
@@ -181,7 +179,6 @@ public class UserConsole {
      *
      * @param context the specified request context
      */
-    @Before(ConsoleAdminAuthAdvice.class)
     public void getUsers(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);
@@ -228,7 +225,6 @@ public class UserConsole {
      *
      * @param context the specified request context
      */
-    @Before(ConsoleAdminAuthAdvice.class)
     public void getUser(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);
@@ -261,7 +257,6 @@ public class UserConsole {
      *
      * @param context the specified request context
      */
-    @Before(ConsoleAdminAuthAdvice.class)
     public void changeUserRole(final RequestContext context) {
         final JsonRenderer renderer = new JsonRenderer();
         context.setRenderer(renderer);

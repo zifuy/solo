@@ -63,8 +63,8 @@
                         <#if commentable>
                         <span class="post-comments-count">
                                 &nbsp; | &nbsp;
-                                <a href="${servePath}${article.articlePermalink}#comments">
-                                    ${article.articleCommentCount} ${cmtLabel}</a>
+                                <a href="${servePath}${article.articlePermalink}#b3logsolocomments">
+                                    <span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span> ${cmtLabel}</a>
                         </span>
                         </#if>
                         &nbsp; | &nbsp; ${viewsLabel}
@@ -107,7 +107,15 @@
                 </footer>
             </article>
         </div>
-        <@comments commentList=articleComments article=article></@comments>
+        <#if commentable>
+            <div id="b3logsolocomments"></div>
+            <div id="vcomment" data-name="${article.authorName}" data-postId="${article.oId}"></div>
+            <#if !staticSite>
+            <div id="soloComments" style="display: none;">
+                <@comments commentList=articleComments article=article></@comments>
+            </div>
+            </#if>
+        </#if>
         <#if 0 != relevantArticlesDisplayCount>
             <div id="relevantArticles"></div>
         </#if>

@@ -41,17 +41,9 @@ import org.testng.annotations.Test;
 public class ArticleProcessorTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * getArchivesArticlesByPage.
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getArchivesArticlesByPage() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/articles/archives/" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy/MM"));
@@ -68,7 +60,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getArticleContent() throws Exception {
         final JSONObject article = getArticleRepository().get(new Query()).optJSONArray(Keys.RESULTS).optJSONObject(0);
         final String articleId = article.optString(Keys.OBJECT_ID);
@@ -86,7 +78,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
     /**
      * getArticlesByPage.
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getArticlesByPage() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/articles");
@@ -103,7 +95,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getAuthorsArticlesByPage() throws Exception {
         final JSONObject admin = getUserRepository().getAdmin();
         final String userId = admin.optString(Keys.OBJECT_ID);
@@ -121,7 +113,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
     /**
      * getRandomArticles.
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getRandomArticles() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/articles/random");
@@ -138,7 +130,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getRelevantArticles() throws Exception {
         final JSONObject article = getArticleRepository().get(new Query()).optJSONArray(Keys.RESULTS).optJSONObject(0);
         final String articleId = article.optString(Keys.OBJECT_ID);
@@ -155,7 +147,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
     /**
      * getTagArticlesByPage.
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void getTagArticlesByPage() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/articles/tags/Solo");
@@ -170,7 +162,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
     /**
      * showArchiveArticles.
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void showArchiveArticles() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/archives/" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy/MM"));
@@ -188,7 +180,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void showArticle() throws Exception {
         final JSONObject article = getArticleRepository().get(new Query()).optJSONArray(Keys.RESULTS).optJSONObject(0);
 
@@ -208,7 +200,7 @@ public class ArticleProcessorTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
+    @Test
     public void showArticlePwdForm() throws Exception {
         final JSONObject article = getArticleRepository().get(new Query()).optJSONArray(Keys.RESULTS).optJSONObject(0);
         final String articleId = article.optString(Keys.OBJECT_ID);

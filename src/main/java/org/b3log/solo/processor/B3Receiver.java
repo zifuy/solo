@@ -18,14 +18,13 @@
 package org.b3log.solo.processor;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.Transaction;
@@ -44,19 +43,19 @@ import org.json.JSONObject;
 import java.util.Date;
 
 /**
- * Receiving articles and comments from B3log community. Visits <a href="https://hacpai.com/b3log">B3log 构思</a> for more details.
+ * Receiving articles and comments from B3log community. Visits <a href="https://hacpai.com/article/1546941897596">B3log 构思 - 分布式社区网络</a> for more details.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.1, Mar 26, 2019
+ * @version 3.0.0.1, Mar 14, 2020
  * @since 0.5.5
  */
-@RequestProcessor
+@Singleton
 public class B3Receiver {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(B3Receiver.class);
+    private static final Logger LOGGER = LogManager.getLogger(B3Receiver.class);
 
     /**
      * User repository.
@@ -139,7 +138,6 @@ public class B3Receiver {
      *
      * @param context the specified request context
      */
-    @RequestProcessing(value = "/apis/symphony/article", method = {HttpMethod.POST, HttpMethod.PUT})
     public void postArticle(final RequestContext context) {
         final JSONObject ret = new JSONObject().put(Keys.CODE, 0);
         context.renderJSON(ret);
@@ -149,6 +147,16 @@ public class B3Receiver {
 
         try {
             final JSONObject client = requestJSONObject.optJSONObject("client");
+            if (null == client) {
+                ret.put(Keys.CODE, 1);
+                final String msg = "Not found client";
+                ret.put(Keys.MSG, msg);
+                LOGGER.log(Level.WARN, msg);
+
+                return;
+            }
+
+
             final String articleAuthorName = client.optString(User.USER_NAME);
             final JSONObject articleAuthor = userRepository.getByUserName(articleAuthorName);
             if (null == articleAuthor) {
@@ -172,6 +180,15 @@ public class B3Receiver {
             }
 
             final JSONObject symArticle = requestJSONObject.optJSONObject(Article.ARTICLE);
+            if (null == symArticle) {
+                ret.put(Keys.CODE, 1);
+                final String msg = "Not found article";
+                ret.put(Keys.MSG, msg);
+                LOGGER.log(Level.WARN, msg);
+
+                return;
+            }
+
             final String title = symArticle.optString("title");
             final String articleId = symArticle.optString("id");
             final JSONObject oldArticle = articleQueryService.getArticleById(articleId);
@@ -248,7 +265,6 @@ public class B3Receiver {
      *
      * @param context the specified request context
      */
-    @RequestProcessing(value = "/apis/symphony/comment", method = HttpMethod.PUT)
     public void addComment(final RequestContext context) {
         final JSONObject ret = new JSONObject().put(Keys.CODE, 0);
         context.renderJSON(ret);
@@ -259,7 +275,25 @@ public class B3Receiver {
 
         try {
             final JSONObject symCmt = requestJSONObject.optJSONObject(Comment.COMMENT);
+            if (null == symCmt) {
+                ret.put(Keys.CODE, 1);
+                final String msg = "Not found comment";
+                ret.put(Keys.MSG, msg);
+                LOGGER.log(Level.WARN, msg);
+
+                return;
+            }
+
             final JSONObject symClient = requestJSONObject.optJSONObject("client");
+            if (null == symClient) {
+                ret.put(Keys.CODE, 1);
+                final String msg = "Not found client";
+                ret.put(Keys.MSG, msg);
+                LOGGER.log(Level.WARN, msg);
+
+                return;
+            }
+
             final String articleAuthorName = symClient.optString(User.USER_NAME);
             final JSONObject articleAuthor = userRepository.getByUserName(articleAuthorName);
             if (null == articleAuthor) {

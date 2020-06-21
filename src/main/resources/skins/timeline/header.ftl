@@ -42,14 +42,9 @@
             <#list pageNavigations as page>
                 <li>
                     <a href="${page.pagePermalink}" target="${page.pageOpenTarget}"><#if page.pageIcon != ''><img
-                            class="page-icon" src="${page.pageIcon}"></#if>${page.pageTitle}</a>
+                            class="page-icon" src="${page.pageIcon}" alt="${page.pageTitle}"></#if>${page.pageTitle}</a>
                 </li>
             </#list>
-            <#if commentable>
-                <li>
-                    <a href="${servePath}/dynamic.html">${dynamicLabel}</a>
-                </li>
-            </#if>
             <li>
                 <a href="${servePath}/tags.html">${allTagsLabel}</a>
             </li>

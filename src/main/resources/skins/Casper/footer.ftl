@@ -43,18 +43,14 @@
             </a>
             <br>
             ${statistic.statisticPublishedBlogArticleCount} ${articleLabel} &nbsp;
-            <#if commentable>${statistic.statisticPublishedBlogCommentCount} ${commentLabel} &nbsp;</#if>
             <span data-uvstaturl="${servePath}">${statistic.statisticBlogViewCount}</span> ${viewLabel} &nbsp;
-            ${onlineVisitorCnt} ${onlineVisitorLabel}
+            <#if !staticSite>${onlineVisitorCnt} ${onlineVisitorLabel}</#if>
         </div>
     </div>
 </footer>
 
-<script type="text/javascript" src="${staticServePath}/js/lib/compress/pjax.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="${staticServePath}/js/common${miniPostfix}.js?${staticResourceVersion}"
-        charset="utf-8"></script>
-<script type="text/javascript"
-        src="${staticServePath}/skins/${skinDirName}/js/common${miniPostfix}.js?${staticResourceVersion}"
-        charset="utf-8"></script>
 <#include "../../common-template/label.ftl">
+<script type="text/javascript"
+        src="${staticServePath}/skins/${skinDirName}/js/common.min.js?${staticResourceVersion}"
+        charset="utf-8"></script>
 ${plugins}

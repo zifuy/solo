@@ -15,19 +15,50 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 /**
  * @fileoverview Page util, load heighlight and process comment.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.4.0.2, Dec 29, 2019
+ * @version 2.6.0.0, Jan 18, 2020
  */
-var Page = function (tips) {
+window.Page = function (tips) {
   this.currentCommentId = ''
   this.tips = tips
 }
 
 $.extend(Page.prototype, {
+  /**
+   * 第三方评论
+   */
+  vcomment: function ( ) {
+    const $vcomment = $('#vcomment')
+    if ($vcomment.length === 0) {
+      return
+    }
+    const vcomment = new Vcomment({
+      id: 'vcomment',
+      postId: $vcomment.data('postid'),
+      url: 'https://hacpai.com',
+      userName: $vcomment.data('name'),
+      currentPage: 1,
+      vditor: {
+        lineNumber: Label.showCodeBlockLn,
+        hljsEnable: !Label.luteAvailable,
+        hljsStyle: Label.hljsStyle,
+      },
+      error () {
+        $vcomment.remove()
+        $('#soloComments').show()
+      },
+    })
+
+    vcomment.render()
+  },
+  /**
+   * 分享
+   */
   share: function () {
     var $this = $('.article__share')
     if ($this.length === 0) {
@@ -59,14 +90,19 @@ $.extend(Page.prototype, {
       }
 
       if (key === 'wechat') {
-        if ($qrCode.find('canvas').length === 0) {
-          Util.addScript(Label.staticServePath +
-            '/js/lib/jquery.qrcode.min.js', 'qrcodeScript')
-          $qrCode.qrcode({
-            width: 128,
-            height: 128,
-            text: shareURL,
+        if (typeof QRious === 'undefined') {
+          Util.addScript(Label.staticServePath + '/js/lib/qrious.min.js',
+            'qriousScript')
+        }
+
+        if ($qrCode.css('background-image') === "none") {
+          const qr = new QRious({
+            padding: 0,
+            element: $qrCode[0],
+            value: shareURL,
+            size: 99,
           })
+          $qrCode.css('background-image', `url(${qr.toDataURL('image/jpeg')})`)
         } else {
           $qrCode.slideToggle()
         }
@@ -92,6 +128,7 @@ $.extend(Page.prototype, {
     $('#soloEditorAdd').click(function () {
       that.submitComment()
     })
+    that.vcomment()
   },
   toggleEditor: function (commentId, name) {
     var $editor = $('#soloEditor')
@@ -102,9 +139,6 @@ $.extend(Page.prototype, {
 
     if (!$('#soloEditorComment').hasClass('vditor')) {
       var that = this
-      Util.addScript(
-        'https://cdn.jsdelivr.net/npm/vditor@2.0.15/dist/index.min.js',
-        'vditorScript')
       var toolbar = [
         'emoji',
         'headings',
@@ -126,7 +160,7 @@ $.extend(Page.prototype, {
         'undo',
         'redo',
         '|',
-        'wysiwyg',
+        'edit-mode',
         'both',
         'preview',
         'format',
@@ -144,7 +178,7 @@ $.extend(Page.prototype, {
           'link',
           'list',
           'check',
-          'wysiwyg',
+          'edit-mode',
           'preview',
           'fullscreen',
           'help',
@@ -174,7 +208,7 @@ $.extend(Page.prototype, {
             if (element.style.display === 'none') {
               return
             }
-            Util.parseLanguage()
+            Util.parseMarkdown()
           },
         },
         counter: 500,
@@ -366,15 +400,6 @@ $.extend(Page.prototype, {
     }
   },
   /*
-   * @description 添加回复评论表单
-   * @param {String} id 被回复的评论 id
-   */
-  addReplyForm: function (id, name) {
-    var that = this
-    that.currentCommentId = id
-    this.toggleEditor(id, name)
-  },
-  /*
    * @description 隐藏回复评论的浮出层
    * @parma {String} id 被回复的评论 id
    */
@@ -415,7 +440,6 @@ $.extend(Page.prototype, {
       $('#comments').html(commentHTML)
     }
     Util.parseMarkdown()
-    Util.parseLanguage()
     window.location.hash = '#comments'
   },
 })

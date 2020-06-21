@@ -33,19 +33,10 @@ import org.testng.annotations.Test;
 public class PreferenceMgmtServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Update Preference.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void updatePreference() throws Exception {
         final PreferenceMgmtService preferenceMgmtService = getPreferenceMgmtService();
         final OptionQueryService optionQueryService = getOptionQueryService();

@@ -19,9 +19,9 @@
  * @fileoverview editor
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.3.0.1, Aug 6, 2019
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.4.1.1, Feb 24, 2020
  */
-
 admin.editors = {}
 
 /*
@@ -31,7 +31,7 @@ admin.editors = {}
  * @param conf.id 编辑器渲染元素 id
  * @param conf.height 编辑器种类
  */
-var SoloEditor = function (conf) {
+window.SoloEditor = function (conf) {
   this.conf = conf
   this.init()
 }
@@ -41,6 +41,27 @@ $.extend(SoloEditor.prototype, {
    * @description 初始化编辑器
    */
   init: function () {
+
+    // 编辑器常用表情使用社区端的设置
+    $.ajax({
+      url: 'https://hacpai.com/apis/vcomment/users/emotions',
+      type: 'GET',
+      cache: true,
+      async: false,
+      xhrFields: {
+        withCredentials: true,
+      },
+      success: function (result) {
+        Label.emoji = {}
+        if (Array.isArray(result.data)) {
+          result.data.forEach(item => {
+            const key = Object.keys(item)[0]
+            Label.emoji[key] = item[key]
+          })
+        }
+      },
+    })
+
     const options = {
       typewriterMode: this.conf.typewriterMode,
       cache: true,
@@ -53,11 +74,11 @@ $.extend(SoloEditor.prototype, {
           enable: !Label.luteAvailable,
           style: Label.hljsStyle,
         },
-        parse: function(element) {
+        parse: function (element) {
           if (element.style.display === 'none') {
             return
           }
-          Util.parseLanguage()
+          Util.parseMarkdown()
         },
       },
       upload: {
@@ -65,9 +86,7 @@ $.extend(SoloEditor.prototype, {
         url: Label.uploadURL,
         token: Label.uploadToken,
         filename: function (name) {
-          return  name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').
-            replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').
-            replace('/\\s/g', '')
+          return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').replace('/\\s/g', '')
         }
       },
       height: this.conf.height,
@@ -76,6 +95,10 @@ $.extend(SoloEditor.prototype, {
         enable: this.conf.resize,
       },
       lang: Label.localeString,
+      hint: {
+        emojiTail: `<a href="https://hacpai.com/settings/function" target="_blank">设置常用表情</a>`,
+        emoji: Label.emoji,
+      },
     }
 
     if ($(window).width() < 768) {
@@ -87,7 +110,7 @@ $.extend(SoloEditor.prototype, {
         'list',
         'check',
         'upload',
-        'wysiwyg',
+        'edit-mode',
         'preview',
         'fullscreen',
         'help',
@@ -95,7 +118,13 @@ $.extend(SoloEditor.prototype, {
       options.resize.enable = false
     }
 
-    this.editor = new Vditor(this.conf.id, options)
+    if (typeof Vditor === 'undefined') {
+      Util.loadVditor(() => {
+        this.editor = new Vditor(this.conf.id, options)
+      });
+    } else {
+      this.editor = new Vditor(this.conf.id, options)
+    }
 
     if (typeof this.conf.fun === 'function') {
       this.conf.fun()

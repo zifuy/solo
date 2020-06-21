@@ -19,18 +19,17 @@ package org.b3log.solo.processor;
 
 import freemarker.template.Template;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.http.renderer.AbstractFreeMarkerRenderer;
 import org.b3log.latke.http.renderer.TextHtmlRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.util.Locales;
 import org.b3log.solo.model.Option;
@@ -53,16 +52,16 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.12, Jan 3, 2020
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.5
  */
-@RequestProcessor
+@Singleton
 public class UserTemplateProcessor {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ArticleProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(ArticleProcessor.class);
 
     /**
      * DataModelService.
@@ -93,7 +92,6 @@ public class UserTemplateProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/{name}.html", method = HttpMethod.GET)
     public void showPage(final RequestContext context) {
         final String requestURI = context.requestURI();
         final String templateName = context.pathVar("name") + ".ftl";
@@ -112,7 +110,7 @@ public class UserTemplateProcessor {
             return;
         }
 
-        LOGGER.log(Level.DEBUG, "Shows page [requestURI={0}, templateName={1}]", requestURI, templateName);
+        LOGGER.log(Level.DEBUG, "Shows page [requestURI={}, templateName={}]", requestURI, templateName);
 
         final Request request = context.getRequest();
         final Response response = context.getResponse();

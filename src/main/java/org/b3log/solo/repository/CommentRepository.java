@@ -17,10 +17,11 @@
  */
 package org.b3log.solo.repository;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.solo.cache.CommentCache;
@@ -43,7 +44,7 @@ public class CommentRepository extends AbstractRepository {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CommentRepository.class);
+    private static final Logger LOGGER = LogManager.getLogger(CommentRepository.class);
 
     /**
      * Article repository.
@@ -97,24 +98,6 @@ public class CommentRepository extends AbstractRepository {
     }
 
     /**
-     * Gets post comments recently with the specified fetch.
-     *
-     * @param fetchSize the specified fetch size
-     * @return a list of comments recently, returns an empty list if not found
-     * @throws RepositoryException repository exception
-     */
-    public List<JSONObject> getRecentComments(final int fetchSize) throws RepositoryException {
-        final Query query = new Query().
-                addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
-                setPage(1, fetchSize).setPageCount(1);
-        final List<JSONObject> ret = getList(query);
-        // Removes unpublished article related comments
-        removeForUnpublishedArticles(ret);
-
-        return ret;
-    }
-
-    /**
      * Gets comments with the specified on id, current page number and
      * page size.
      *
@@ -147,7 +130,7 @@ public class CommentRepository extends AbstractRepository {
             remove(commentId);
         }
 
-        LOGGER.log(Level.DEBUG, "Removed comments[onId={0}, removedCnt={1}]", onId, comments.size());
+        LOGGER.log(Level.DEBUG, "Removed comments[onId={}, removedCnt={}]", onId, comments.size());
 
         return comments.size();
     }

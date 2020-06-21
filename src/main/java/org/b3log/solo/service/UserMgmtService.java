@@ -20,11 +20,12 @@ package org.b3log.solo.service;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.RepositoryException;
@@ -33,6 +34,7 @@ import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.Strings;
+import org.b3log.solo.Server;
 import org.b3log.solo.model.Common;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.model.UserExt;
@@ -45,8 +47,8 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @author <a href="https://github.com/nanolikeyou">nanolikeyou</a>
- * @version 1.1.0.19, Jun 6, 2019
+ * @author <a href="https://hacpai.com/member/nanolikeyou">nanolikeyou</a>
+ * @version 1.1.0.20, Mar 17, 2020
  * @since 0.4.0
  */
 @Service
@@ -55,7 +57,7 @@ public class UserMgmtService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UserMgmtService.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserMgmtService.class);
 
     /**
      * Length of hashed password.
@@ -112,6 +114,15 @@ public class UserMgmtService {
             final JSONObject requestJSON = new JSONObject().
                     put(User.USER_NAME, admin.optString(User.USER_NAME)).
                     put(UserExt.USER_B3_KEY, admin.optString(UserExt.USER_B3_KEY));
+            final JSONObject preference = optionQueryService.getPreference();
+            final JSONObject client = new JSONObject().
+                    put("clientTitle", preference.getString(Option.ID_C_BLOG_TITLE)).
+                    put("clientHost", Latkes.getServePath()).
+                    put("clientName", "Solo").
+                    put("clientVersion", Server.VERSION).
+                    put("userName", admin.optString(User.USER_NAME)).
+                    put("userB3Key", admin.optString(UserExt.USER_B3_KEY));
+            requestJSON.put("client", client);
             final HttpResponse res = HttpRequest.post("https://hacpai.com/user/usite").trustAllCerts(true).
                     connectionTimeout(3000).timeout(7000).header("User-Agent", Solos.USER_AGENT).
                     body(requestJSON.toString()).send();

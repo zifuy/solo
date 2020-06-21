@@ -18,15 +18,18 @@
 package org.b3log.solo.processor;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.http.*;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
+import org.b3log.latke.http.Cookie;
+import org.b3log.latke.http.Request;
+import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.http.renderer.AbstractFreeMarkerRenderer;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
@@ -53,16 +56,16 @@ import java.util.Map;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
  * @author <a href="https://vanessa.b3log.org">Vanessa</a>
- * @version 1.2.4.18, Jan 7, 2020
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.3.1
  */
-@RequestProcessor
+@Singleton
 public class IndexProcessor {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(IndexProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(IndexProcessor.class);
 
     /**
      * DataModelService.
@@ -100,7 +103,6 @@ public class IndexProcessor {
      * @param context the specified context
      * @throws Exception exception
      */
-    @RequestProcessing(value = {"", "/", "/index.html"}, method = HttpMethod.GET)
     public void showIndex(final RequestContext context) {
         final Request request = context.getRequest();
         final Response response = context.getResponse();
@@ -115,6 +117,7 @@ public class IndexProcessor {
             if (StringUtils.isBlank(specifiedSkin)) {
                 final JSONObject skinOpt = optionQueryService.getSkin();
                 specifiedSkin = Solos.isMobile(request) ?
+
                         skinOpt.optString(Option.ID_C_MOBILE_SKIN_DIR_NAME) :
                         skinOpt.optString(Option.ID_C_SKIN_DIR_NAME);
             }
@@ -159,15 +162,17 @@ public class IndexProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/start", method = HttpMethod.GET)
     public void showStart(final RequestContext context) {
-        if (initService.isInited() && null != Solos.getCurrentUser(context.getRequest(), context.getResponse())) {
+        if (initService.isInited() && null != Solos.getCurrentUser(context)) {
             context.sendRedirect(Latkes.getServePath());
 
             return;
         }
 
-        String referer = context.header("referer");
+        String referer = context.param("referer");
+        if (StringUtils.isBlank(referer)) {
+            referer = context.header("referer");
+        }
         if (StringUtils.isBlank(referer) || !isInternalLinks(referer)) {
             referer = Latkes.getServePath();
         }
@@ -182,7 +187,6 @@ public class IndexProcessor {
         dataModel.put(Common.YEAR, String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
         dataModel.put(Common.REFERER, URLs.encode(referer));
         Keys.fillRuntime(dataModel);
-        dataModelService.fillMinified(dataModel);
         dataModelService.fillFaviconURL(dataModel, optionQueryService.getPreference());
         dataModelService.fillUsite(dataModel);
         Solos.addGoogleNoIndex(context);
@@ -193,7 +197,6 @@ public class IndexProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/logout", method = HttpMethod.GET)
     public void logout(final RequestContext context) {
         final Request request = context.getRequest();
 
@@ -208,7 +211,6 @@ public class IndexProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = "/kill-browser", method = HttpMethod.GET)
     public void showKillBrowser(final RequestContext context) {
         final Request request = context.getRequest();
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer(context, "common-template/kill-browser.ftl");
@@ -222,7 +224,6 @@ public class IndexProcessor {
             dataModelService.fillUsite(dataModel);
             Keys.fillServer(dataModel);
             Keys.fillRuntime(dataModel);
-            dataModelService.fillMinified(dataModel);
         } catch (final ServiceException e) {
             LOGGER.log(Level.ERROR, e.getMessage(), e);
 

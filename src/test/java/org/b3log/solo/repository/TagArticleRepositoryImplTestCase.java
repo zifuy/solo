@@ -17,7 +17,6 @@
  */
 package org.b3log.solo.repository;
 
-import junit.framework.Assert;
 import org.b3log.latke.Keys;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.solo.AbstractTestCase;
@@ -25,6 +24,7 @@ import org.b3log.solo.model.Article;
 import org.b3log.solo.model.Tag;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -95,6 +95,6 @@ public class TagArticleRepositoryImplTestCase extends AbstractTestCase {
 
         final List<JSONObject> mostUsedTags = tagArticleRepository.getMostUsedTags(3);
         Assert.assertNotNull(mostUsedTags);
-        Assert.assertEquals(1, mostUsedTags.size());
+        Assert.assertEquals(2, mostUsedTags.size());
     }
 }

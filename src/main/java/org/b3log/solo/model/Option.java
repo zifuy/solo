@@ -25,8 +25,8 @@ import org.json.JSONObject;
  * This class defines option model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://github.com/hzchendou">hzchendou</a>
- * @version 1.6.0.2, Aug 18, 2019
+ * @author <a href="https://hacpai.com/member/hzchendou">hzchendou</a>
+ * @version 1.6.0.5, Jan 25, 2020
  * @since 0.6.0
  */
 public final class Option {
@@ -52,6 +52,42 @@ public final class Option {
     public static final String OPTION_CATEGORY = "optionCategory";
 
     // oId constants
+
+    /**
+     * Key of inline math allow digit after open marker flag. 内联数学公式是否允许起始 $ 后紧跟数字 https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_IMADAOM = "inlineMathAllowDigitAfterOpenMarker";
+
+    /**
+     * Key of chinese punct flag. 中文后跟英文逗号句号等标点替换为中文对应标点 https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_CHINESE_PUNCT = "chinesePunct";
+
+    /**
+     * Key of fix term typo flag. 术语修正 https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_FIX_TERM_TYPO = "fixTermTypo";
+
+    /**
+     * Key of auto space flag. 中西文间自动插入空格 https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_AUTO_SPACE = "autoSpace";
+
+    /**
+     * Key of show ToC flag. 支持 [ToC] https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_SHOW_TOC = "showToC";
+
+    /**
+     * Key of footnotes flag. 支持脚注 https://github.com/88250/solo/issues/54
+     */
+    public static final String ID_C_FOOTNOTES = "footnotes";
+
+    /**
+     * Key of show code block line num flag. 支持代码块行号显示 https://github.com/88250/solo/issues/4
+     */
+    public static final String ID_C_SHOW_CODE_BLOCK_LN = "showCodeBlockLn";
+
     /**
      * Key of hljs theme. 在设置中可选择语法高亮主题 https://github.com/b3log/solo/issues/12722
      */
@@ -300,10 +336,15 @@ public final class Option {
      * Default preference.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 2.3.0.3, Sep 18, 2019
+     * @version 2.3.0.6, Jan 25, 2020
      * @since 0.3.1
      */
     public static final class DefaultPreference {
+
+        /**
+         * Default show code block line num.
+         */
+        public static final String DEFAULT_SHOW_CODE_BLOCK_LN = "false";
 
         /**
          * Default hljs theme.

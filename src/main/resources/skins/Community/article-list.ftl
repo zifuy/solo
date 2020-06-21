@@ -43,8 +43,8 @@
                 </li>
                 <#if commentable>
                 <li>
-                    <a rel="nofollow" title="${commentLabel}" href="${servePath}${article.articlePermalink}#comments">
-                        ${commentLabel} (${article.articleCommentCount})
+                    <a rel="nofollow" title="${commentLabel}" href="${servePath}${article.articlePermalink}#b3logsolocomments">
+                        ${commentLabel} (<span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span>)
                     </a>
                 </li>
                 </#if>

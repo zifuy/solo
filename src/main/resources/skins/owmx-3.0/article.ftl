@@ -62,9 +62,9 @@ ${topBarReplacement}
                         <span data-uvstaturl="${servePath}${article.articlePermalink}">${article.articleViewCount}</span>
                     </a>
                     <#if commentable> | ${commentCount1Label}
-                        <a rel="nofollow" href="${servePath}${article.articlePermalink}#comments">
+                        <a rel="nofollow" href="${servePath}${article.articlePermalink}#b3logsolocomments">
                             <span class="left articles-commentIcon" title="${commentLabel}"></span>
-                            ${article.articleCommentCount}
+                            <span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span>
                         </a>
                     </#if>
                 </p>
@@ -103,7 +103,18 @@ ${topBarReplacement}
             <div id="relevantArticles" class="article-relative"></div>
             <div id="randomArticles"></div>
             <div id="externalRelevantArticles"></div>
-            <@comments commentList=articleComments article=article></@comments>
+            <#if commentable>
+                <div id="b3logsolocomments"></div>
+                <div id="vcomment"
+                     class="comments"
+                     style="padding-top: 15px;"
+                     data-name="${article.authorName}" data-postId="${article.oId}"></div>
+                <#if !staticSite>
+                <div id="soloComments" style="display: none;">
+                    <@comments commentList=articleComments article=article></@comments>
+                </div>
+                </#if>
+            </#if>
         </article>
         <#include "side.ftl">
         <div class="clear"></div>

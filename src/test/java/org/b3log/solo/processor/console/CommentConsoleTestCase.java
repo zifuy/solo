@@ -19,6 +19,7 @@ package org.b3log.solo.processor.console;
 
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.repository.Query;
 import org.b3log.solo.AbstractTestCase;
 import org.b3log.solo.MockRequest;
 import org.b3log.solo.MockResponse;
@@ -39,19 +40,10 @@ import java.util.List;
 public class CommentConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * getComments.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getComments() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/comments/1/10/20");
@@ -70,7 +62,6 @@ public class CommentConsoleTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getArticleComments() throws Exception {
         final List<JSONObject> recentArticles = getArticleQueryService().getRecentArticles(1);
         final JSONObject article = recentArticles.get(0);
@@ -93,9 +84,8 @@ public class CommentConsoleTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void removeArticleComment() throws Exception {
-        final List<JSONObject> recentComments = getCommentRepository().getRecentComments(1);
+        final List<JSONObject> recentComments = getCommentRepository().getList(new Query());
         final JSONObject comment = recentComments.get(0);
         final String commentId = comment.optString(Keys.OBJECT_ID);
 

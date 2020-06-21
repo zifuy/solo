@@ -50,15 +50,12 @@
             </svg>
 
             <div class="side__header">
-                <a href="${servePath}" rel="start"><img class="side__logo" src="${adminUser.userAvatar}"></a>
+                <a href="${servePath}" rel="start"><img class="side__logo" alt="${blogTitle}" src="${adminUser.userAvatar}"></a>
 
                 <div class="side__meta">
                     ${statistic.statisticPublishedBlogArticleCount} ${articleLabel} <br>
-                    <#if commentable>
-                        ${statistic.statisticPublishedBlogCommentCount} ${commentLabel} <br>
-                    </#if>
-                    <span data-uvstaturl="${servePath}">${statistic.statisticBlogViewCount}</span> ${viewLabel} <br>
-                    ${onlineVisitorCnt} ${onlineVisitorLabel}
+                    <span data-uvstaturl="${servePath}">${statistic.statisticBlogViewCount}</span> ${viewLabel}
+                    <#if !staticSite><br>${onlineVisitorCnt} ${onlineVisitorLabel}</#if>
                 </div>
             </div>
 
@@ -78,7 +75,7 @@
                 <#list pageNavigations as page>
                     <li>
                         <a href="${page.pagePermalink}" target="${page.pageOpenTarget}"><#if page.pageIcon != ''><img
-                                class="page-icon" src="${page.pageIcon}"></#if>${page.pageTitle}</a>
+                                class="page-icon" src="${page.pageIcon}" alt="${page.pageTitle}"></#if>${page.pageTitle}</a>
                     </li>
                 </#list>
                 <li>

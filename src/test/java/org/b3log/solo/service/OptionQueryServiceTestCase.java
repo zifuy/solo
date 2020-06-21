@@ -34,19 +34,10 @@ import org.testng.annotations.Test;
 public class OptionQueryServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Get Preference.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getPreference() throws Exception {
         final OptionQueryService optionQueryService = getOptionQueryService();
         final JSONObject preference = optionQueryService.getPreference();

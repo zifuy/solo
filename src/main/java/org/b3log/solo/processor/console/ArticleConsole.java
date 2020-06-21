@@ -19,16 +19,16 @@ package org.b3log.solo.processor.console;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.Before;
 import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.util.Strings;
@@ -49,17 +49,16 @@ import java.util.stream.Collectors;
  * Article console request processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.4, Jan 11, 2020
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.0
  */
 @Singleton
-@Before(ConsoleAuthAdvice.class)
 public class ArticleConsole {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ArticleConsole.class);
+    private static final Logger LOGGER = LogManager.getLogger(ArticleConsole.class);
 
     /**
      * Article management service.
@@ -181,7 +180,7 @@ public class ArticleConsole {
         context.setRenderer(renderer);
         try {
             final String articleId = context.pathVar("id");
-            final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+            final JSONObject currentUser = Solos.getCurrentUser(context);
             if (!articleQueryService.canAccessArticle(articleId, currentUser)) {
                 final JSONObject ret = new JSONObject();
                 renderer.setJSONObject(ret);
@@ -299,7 +298,7 @@ public class ArticleConsole {
         final JSONObject ret = new JSONObject();
         renderer.setJSONObject(ret);
         final String articleId = context.pathVar("id");
-        final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+        final JSONObject currentUser = Solos.getCurrentUser(context);
 
         try {
             if (!articleQueryService.canAccessArticle(articleId, currentUser)) {
@@ -345,7 +344,7 @@ public class ArticleConsole {
 
         try {
             final String articleId = context.pathVar("id");
-            final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+            final JSONObject currentUser = Solos.getCurrentUser(context);
             if (!articleQueryService.canAccessArticle(articleId, currentUser)) {
                 ret.put(Keys.STATUS_CODE, false);
                 ret.put(Keys.MSG, langPropsService.get("forbiddenLabel"));
@@ -493,7 +492,7 @@ public class ArticleConsole {
             final String articleId = article.getString(Keys.OBJECT_ID);
             renderer.setJSONObject(ret);
 
-            final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+            final JSONObject currentUser = Solos.getCurrentUser(context);
             if (!articleQueryService.canAccessArticle(articleId, currentUser)) {
                 ret.put(Keys.MSG, langPropsService.get("forbiddenLabel"));
                 ret.put(Keys.STATUS_CODE, false);
@@ -555,7 +554,7 @@ public class ArticleConsole {
         final JSONObject ret = new JSONObject();
         try {
             final JSONObject requestJSONObject = context.requestJSON();
-            final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+            final JSONObject currentUser = Solos.getCurrentUser(context);
             requestJSONObject.getJSONObject(Article.ARTICLE).put(Article.ARTICLE_AUTHOR_ID, currentUser.getString(Keys.OBJECT_ID));
 
             // 打印请求日志，如果发生特殊情况丢失数据，至少还可以根据日志寻回内容

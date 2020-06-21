@@ -17,9 +17,10 @@
  */
 package org.b3log.solo.service;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
@@ -43,7 +44,7 @@ public class StatisticQueryService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StatisticQueryService.class);
+    private static final Logger LOGGER = LogManager.getLogger(StatisticQueryService.class);
 
     /**
      * Option query service.
@@ -82,8 +83,6 @@ public class StatisticQueryService {
             final JSONObject ret = optionQueryService.getOptions(Option.CATEGORY_C_STATISTIC);
             final long publishedArticleCount = articleRepository.count(new Query().setFilter(new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_PUBLISHED)));
             ret.put(Option.ID_T_STATISTIC_PUBLISHED_ARTICLE_COUNT, publishedArticleCount);
-            final long commentCount = commentRepository.count(new Query());
-            ret.put(Option.ID_T_STATISTIC_PUBLISHED_BLOG_COMMENT_COUNT, commentCount);
 
             return ret;
         } catch (final Exception e) {

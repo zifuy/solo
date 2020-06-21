@@ -34,19 +34,10 @@ import org.testng.annotations.Test;
 public class CategoryMgmtServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Add a category.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addCategory() throws Exception {
         final CategoryMgmtService categoryMgmtService = getCategoryMgmtService();
 
@@ -64,7 +55,6 @@ public class CategoryMgmtServiceTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void removeCategory() throws Exception {
         final CategoryMgmtService categoryMgmtService = getCategoryMgmtService();
 
@@ -93,7 +83,6 @@ public class CategoryMgmtServiceTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void updateCategory() throws Exception {
         final CategoryMgmtService categoryMgmtService = getCategoryMgmtService();
 

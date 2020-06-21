@@ -21,18 +21,18 @@ import jodd.io.ZipUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.http.annotation.Before;
 import org.b3log.latke.http.renderer.AbstractFreeMarkerRenderer;
 import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.model.User;
 import org.b3log.latke.plugin.ViewLoadEventData;
@@ -53,23 +53,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
  * Admin console render processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.7.0.17, Dec 15, 2019
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 0.4.1
  */
 @Singleton
-@Before(ConsoleAuthAdvice.class)
 public class AdminConsole {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AdminConsole.class);
+    private static final Logger LOGGER = LogManager.getLogger(AdminConsole.class);
 
     /**
      * Language service.
@@ -118,7 +118,7 @@ public class AdminConsole {
         final Map<String, String> langs = langPropsService.getAll(Latkes.getLocale());
         final Map<String, Object> dataModel = renderer.getDataModel();
         dataModel.putAll(langs);
-        final JSONObject currentUser = Solos.getCurrentUser(context.getRequest(), context.getResponse());
+        final JSONObject currentUser = Solos.getCurrentUser(context);
         final String userName = currentUser.optString(User.USER_NAME);
         dataModel.put(User.USER_NAME, userName);
         final String roleName = currentUser.optString(User.USER_ROLE);
@@ -139,7 +139,6 @@ public class AdminConsole {
             final JSONObject skin = optionQueryService.getSkin();
             dataModel.put(Option.CATEGORY_C_SKIN, skin.optString(Option.ID_C_SKIN_DIR_NAME));
             Keys.fillRuntime(dataModel);
-            dataModelService.fillMinified(dataModel);
             dataModel.put(Common.LUTE_AVAILABLE, Markdowns.LUTE_AVAILABLE);
             // 内置 HTTPS+CDN 文件存储 https://github.com/b3log/solo/issues/12556
             dataModel.put(Common.UPLOAD_TOKEN, "");
@@ -215,6 +214,7 @@ public class AdminConsole {
             timeZoneIdOptions.append(option);
         }
 
+        dataModel.put(Common.LUTE_AVAILABLE, Markdowns.LUTE_AVAILABLE);
         dataModel.put("timeZoneIdOptions", timeZoneIdOptions.toString());
         fireFreeMarkerActionEvent(templateName, dataModel);
     }
@@ -280,7 +280,7 @@ public class AdminConsole {
 
         try {
             final JSONObject json = exportService.getJSONs();
-            final byte[] data = json.toString(4).getBytes("UTF-8");
+            final byte[] data = json.toString(4).getBytes(StandardCharsets.UTF_8);
 
             try (final OutputStream output = new FileOutputStream(localFile)) {
                 IOUtils.write(data, output);

@@ -39,17 +39,8 @@ import org.testng.annotations.Test;
 public class CategoryProcessorTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * showCategoryArticles.
      */
-    @Test(dependsOnMethods = "init")
     public void showCategoryArticles() {
         MockRequest request = mockRequest();
         request.setRequestURI("/console/category/");

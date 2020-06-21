@@ -16,9 +16,7 @@ node(label) {
   def gitCommit = myRepo.GIT_COMMIT
   def gitBranch = myRepo.GIT_BRANCH
 
-  def imageTag1 = "v1.1"
-  def imageTag2 = "v1.2"
-  def imageTag3 = "v1.3"
+  def imageTag = "v1.4"
   def dockerRegistryUrl = "hbr.zifuy.cn"
   def imageEndpoint = "test/solo"
   def image = "${dockerRegistryUrl}/${imageEndpoint}"
@@ -34,7 +32,7 @@ node(label) {
       throw(exc)
     }
   }
-  stage('构建 Docker test 镜像') {
+  stage('构建 Docker 镜像') {
     withCredentials([[$class: 'UsernamePasswordMultiBinding',
       credentialsId: 'dockerhbr',
       usernameVariable: 'DOCKER_HUB_USER',
@@ -43,43 +41,9 @@ node(label) {
           echo "3. 构建 Docker 镜像阶段"
           sh """
             docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-            docker build --target test -t ${image}:${imageTag1} .
-            docker push ${image}:${imageTag1}
-            docker rmi -f ${image}:${imageTag1}
-            #sleep 3600
-            """
-        }
-    }
-  }
-    stage('构建 Docker dev 镜像') {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding',
-      credentialsId: 'dockerhbr',
-      usernameVariable: 'DOCKER_HUB_USER',
-      passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-        container('docker') {
-          echo "3. 构建 Docker 镜像阶段"
-          sh """
-            docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-            docker build --target dev -t ${image}:${imageTag2} .
-            docker push ${image}:${imageTag2}
-            docker rmi -f ${image}:${imageTag2}
-            #sleep 3600
-            """
-        }
-    }
-  }
-    stage('构建 Docker prod 镜像') {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding',
-      credentialsId: 'dockerhbr',
-      usernameVariable: 'DOCKER_HUB_USER',
-      passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-        container('docker') {
-          echo "3. 构建 Docker 镜像阶段"
-          sh """
-            docker login https://${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-            docker build --target prod -t ${image}:${imageTag3} .
-            docker push ${image}:${imageTag3}
-            docker rmi -f ${image}:${imageTag3}
+            docker build -t ${image}:${imageTag} .
+            docker push ${image}:${imageTag}
+            docker rmi -f ${image}:${imageTag}
             #sleep 3600
             """
         }
@@ -90,10 +54,10 @@ node(label) {
         echo "创建对象"
         sh """
            #kubectl delete -f deployment.yaml
-           kubectl apply -f deployment.yaml
+           #kubectl apply -f deployment.yaml
            #kubectl create -f service.yaml
            #kubectl create -f ingress.yaml
-           kubectl get pods --all-namespaces
+           #kubectl get pods --all-namespaces
            """
       }
     }

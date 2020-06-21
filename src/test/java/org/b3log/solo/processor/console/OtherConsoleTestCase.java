@@ -35,19 +35,10 @@ import org.testng.annotations.Test;
 public class OtherConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * removeUnusedArchives.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void removeUnusedArchives() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/archive/unused");

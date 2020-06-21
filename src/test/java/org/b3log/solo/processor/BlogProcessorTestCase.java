@@ -35,17 +35,8 @@ import org.testng.annotations.Test;
 public class BlogProcessorTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * getBlogInfo.
      */
-    @Test(dependsOnMethods = "init")
     public void getBlogInfo() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/blog/info");
@@ -59,7 +50,6 @@ public class BlogProcessorTestCase extends AbstractTestCase {
     /**
      * getArticlesTags.
      */
-    @Test(dependsOnMethods = "init")
     public void getArticlesTags() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/blog/articles-tags");

@@ -40,19 +40,10 @@ import org.testng.annotations.Test;
 public class PageConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * addPage.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addPage() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/page/");

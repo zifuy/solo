@@ -35,19 +35,10 @@ import org.testng.annotations.Test;
 public class RepairConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * restoreSigns.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void restoreSigns() throws Exception {
         final MockRequest request = mockRequest();
         request.setRequestURI("/fix/restore-signs");

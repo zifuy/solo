@@ -17,20 +17,20 @@
  */
 package org.b3log.solo.service;
 
-import junit.framework.Assert;
 import org.b3log.latke.Keys;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.solo.AbstractTestCase;
 import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * {@link UserMgmtService} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://github.com/nanolikeyou">nanolikeyou</a>
+ * @author <a href="https://hacpai.com/member/nanolikeyou">nanolikeyou</a>
  * @version 1.0.0.5, Aug 2, 2018
  */
 @Test(suiteName = "service")

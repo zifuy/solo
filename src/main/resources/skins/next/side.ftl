@@ -28,7 +28,7 @@
         <#include "../../common-template/toc.ftl"/>
     <#else>
         <section>
-            <img class="site-author-image" src="${adminUser.userAvatar}" title="${userName}"/>
+            <img class="site-author-image" src="${adminUser.userAvatar}" alt="${userName}"title="${userName}"/>
             <p class="site-author-name">${userName}</p>
             <#if "" != noticeBoard>
                 <p class="site-description motion-element">${blogSubtitle}</p>
@@ -45,26 +45,12 @@
                     <span class="site-state-item-count"><span data-uvstaturl="${servePath}">${statistic.statisticBlogViewCount}</span></span>
                     <span class="site-state-item-name">${viewLabel}</span>
                 </div>
-
-                <#if commentable>
-                    <div class="site-state-item site-state-tags">
-                        <a href="${servePath}/dynamic.html">
-                            <span class="site-state-item-count">${statistic.statisticPublishedBlogCommentCount}</span>
-                            <span class="site-state-item-name">${commentLabel}</span>
-                        </a>
-                    </div>
-                </#if>
             </nav>
 
             <div class="feed-link">
                 <a href="${servePath}/rss.xml" rel="alternate">
                     RSS
                 </a>
-                <#if commentable>
-                    <a href="${servePath}/dynamic.html" rel="section">
-                        ${dynamicLabel}
-                    </a>
-                </#if>
                 <a href="${servePath}/tags.html" rel="section">
                     ${allTagsLabel}
                 </a>

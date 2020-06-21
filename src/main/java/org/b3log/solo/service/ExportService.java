@@ -24,11 +24,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.*;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -67,7 +69,7 @@ public class ExportService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ExportService.class);
+    private static final Logger LOGGER = LogManager.getLogger(ExportService.class);
 
     /**
      * Archive date repository.
@@ -235,7 +237,7 @@ public class ExportService {
         final File localFile = new File(localFilePath);
 
         try {
-            final byte[] data = sql.getBytes("UTF-8");
+            final byte[] data = sql.getBytes(StandardCharsets.UTF_8);
             try (final OutputStream output = new FileOutputStream(localFile)) {
                 IOUtils.write(data, output);
             }
@@ -363,7 +365,6 @@ public class ExportService {
             stat.put("recentArticleTime", articleQueryService.getRecentArticleTime());
             final JSONObject statistic = statisticQueryService.getStatistic();
             stat.put("articleCount", statistic.getLong(Option.ID_T_STATISTIC_PUBLISHED_ARTICLE_COUNT));
-            stat.put("commentCount", statistic.getLong(Option.ID_T_STATISTIC_PUBLISHED_BLOG_COMMENT_COUNT));
             stat.put("tagCount", tagQueryService.getTagCount());
             stat.put("skin", optionQueryService.getOptionById(Option.ID_C_SKIN_DIR_NAME).optString(Option.OPTION_VALUE));
             stat.put("mobileSkin", optionQueryService.getOptionById(Option.ID_C_MOBILE_SKIN_DIR_NAME).optString(Option.OPTION_VALUE));

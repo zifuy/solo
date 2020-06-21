@@ -35,19 +35,10 @@ import org.testng.annotations.Test;
 public class PageQueryServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Add Page.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addPage() throws Exception {
         final PageMgmtService pageMgmtService = getPageMgmtService();
 

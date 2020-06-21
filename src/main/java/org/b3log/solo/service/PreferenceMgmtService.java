@@ -17,10 +17,12 @@
  */
 package org.b3log.solo.service;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
@@ -28,6 +30,7 @@ import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.Locales;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.repository.OptionRepository;
+import org.b3log.solo.util.Markdowns;
 import org.json.JSONObject;
 
 import java.util.Iterator;
@@ -37,7 +40,7 @@ import java.util.Locale;
  * Preference management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.0.2, Aug 18, 2019
+ * @version 1.4.0.5, Jan 25, 2020
  * @since 0.4.0
  */
 @Service
@@ -46,7 +49,7 @@ public class PreferenceMgmtService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PreferenceMgmtService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PreferenceMgmtService.class);
 
     /**
      * Option query service.
@@ -218,11 +221,41 @@ public class PreferenceMgmtService {
             hljsThemeOpt.put(Option.OPTION_VALUE, preference.optString(Option.ID_C_HLJS_THEME));
             optionRepository.update(Option.ID_C_HLJS_THEME, hljsThemeOpt);
 
+            final String showCodeBlockLnVal = preference.optString(Option.ID_C_SHOW_CODE_BLOCK_LN);
+            emptyPreferenceOptSave(Option.ID_C_SHOW_CODE_BLOCK_LN, showCodeBlockLnVal);
+            Markdowns.SHOW_CODE_BLOCK_LN = "true".equalsIgnoreCase(showCodeBlockLnVal);
+
             final JSONObject customVarsOpt = optionRepository.get(Option.ID_C_CUSTOM_VARS);
             customVarsOpt.put(Option.OPTION_VALUE, preference.optString(Option.ID_C_CUSTOM_VARS));
             optionRepository.update(Option.ID_C_CUSTOM_VARS, customVarsOpt);
 
+            final String footnotesVal = preference.optString(Option.ID_C_FOOTNOTES);
+            emptyPreferenceOptSave(Option.ID_C_FOOTNOTES, footnotesVal);
+            Markdowns.FOOTNOTES = "true".equalsIgnoreCase(footnotesVal);
+
+            final String showToCVal = preference.optString(Option.ID_C_SHOW_TOC);
+            emptyPreferenceOptSave(Option.ID_C_SHOW_TOC, showToCVal);
+            Markdowns.SHOW_TOC = "true".equalsIgnoreCase(showToCVal);
+
+            final String autoSpaceVal = preference.optString(Option.ID_C_AUTO_SPACE);
+            emptyPreferenceOptSave(Option.ID_C_AUTO_SPACE, autoSpaceVal);
+            Markdowns.AUTO_SPACE = "true".equalsIgnoreCase(autoSpaceVal);
+
+            final String fixTermTypoVal = preference.optString(Option.ID_C_FIX_TERM_TYPO);
+            emptyPreferenceOptSave(Option.ID_C_FIX_TERM_TYPO, fixTermTypoVal);
+            Markdowns.FIX_TERM_TYPO = "true".equalsIgnoreCase(fixTermTypoVal);
+
+            final String chinesePunctVal = preference.optString(Option.ID_C_CHINESE_PUNCT);
+            emptyPreferenceOptSave(Option.ID_C_CHINESE_PUNCT, chinesePunctVal);
+            Markdowns.CHINESE_PUNCT = "true".equalsIgnoreCase(chinesePunctVal);
+
+            final String IMADAOMVal = preference.optString(Option.ID_C_IMADAOM);
+            emptyPreferenceOptSave(Option.ID_C_IMADAOM, IMADAOMVal);
+            Markdowns.IMADAOM = "true".equalsIgnoreCase(IMADAOMVal);
+
             transaction.commit();
+
+            Markdowns.clearCache();
         } catch (final Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -233,5 +266,19 @@ public class PreferenceMgmtService {
         }
 
         LOGGER.log(Level.DEBUG, "Updates preference successfully");
+    }
+
+    private void emptyPreferenceOptSave(final String optID, final String val) throws Exception  {
+        JSONObject opt = optionRepository.get(optID);
+        if (null == opt) {
+            opt = new JSONObject();
+            opt.put(Keys.OBJECT_ID, optID);
+            opt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+            opt.put(Option.OPTION_VALUE, val);
+            optionRepository.add(opt);
+        } else {
+            opt.put(Option.OPTION_VALUE, val);
+            optionRepository.update(optID, opt);
+        }
     }
 }

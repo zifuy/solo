@@ -54,14 +54,9 @@
                 </a>
                 <#list pageNavigations as page>
                     <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
-                        <#if page.pageIcon != ''><img class="page-icon" src="${page.pageIcon}"></#if>${page.pageTitle}
+                        <#if page.pageIcon != ''><img class="page-icon" src="${page.pageIcon}" alt="${page.pageTitle}"></#if>${page.pageTitle}
                     </a>
                 </#list>
-                <#if commentable>
-                    <a href="${servePath}/dynamic.html" rel="section">
-                        <i class="icon-refresh"></i> ${dynamicLabel}
-                    </a>
-                </#if>
                 <a href="${servePath}/tags.html" rel="section">
                     <i class="icon-tags"></i> ${allTagsLabel}
                 </a>
@@ -118,17 +113,10 @@
         <#list pageNavigations as page>
             <li>
                 <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
-                    <#if page.pageIcon != ''><img class="page-icon" src="${page.pageIcon}"></#if>${page.pageTitle}
+                    <#if page.pageIcon != ''><img class="page-icon" src="${page.pageIcon}" alt="${page.pageTitle}"></#if>${page.pageTitle}
                 </a>
             </li>
         </#list>
-        <#if commentable>
-            <li>
-                <a href="${servePath}/dynamic.html" rel="section">
-                    <i class="icon-refresh"></i> ${dynamicLabel}
-                </a>
-            </li>
-        </#if>
         <li>
             <a href="${servePath}/tags.html" rel="section">
                 <i class="icon-tags"></i> ${allTagsLabel}

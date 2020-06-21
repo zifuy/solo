@@ -20,8 +20,9 @@ package org.b3log.solo.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Image utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.2, Dec 28, 2019
+ * @version 1.1.1.0, Feb 27, 2020
  * @since 2.7.0
  */
 public final class Images {
@@ -39,7 +40,7 @@ public final class Images {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Images.class);
+    private static final Logger LOGGER = LogManager.getLogger(Images.class);
 
     /**
      * Community file service URL.
@@ -60,7 +61,9 @@ public final class Images {
         }
 
         for (final String imgSrc : imgSrcs) {
-            if (StringUtils.contains(imgSrc, ".gif") || StringUtils.containsIgnoreCase(imgSrc, "imageView")) {
+            if (!StringUtils.startsWith(imgSrc, COMMUNITY_FILE_URL) ||
+                    StringUtils.contains(imgSrc, ".gif") || StringUtils.containsIgnoreCase(imgSrc, "imageView") ||
+                    StringUtils.containsIgnoreCase(imgSrc, "data:")) {
                 continue;
             }
 

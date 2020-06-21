@@ -19,11 +19,12 @@ package org.b3log.solo.service;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Inject;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.plugin.PluginManager;
@@ -52,7 +53,7 @@ import java.util.List;
  * Solo initialization service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.2.36, Dec 28, 2019
+ * @version 1.5.2.38, Jan 24, 2020
  * @since 0.4.0
  */
 @Service
@@ -61,7 +62,7 @@ public class InitService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(InitService.class);
+    private static final Logger LOGGER = LogManager.getLogger(InitService.class);
 
     /**
      * Option repository.
@@ -199,7 +200,7 @@ public class InitService {
 
         final List<CreateTableResult> createTableResults = JdbcRepositories.initAllTables();
         for (final CreateTableResult createTableResult : createTableResults) {
-            LOGGER.log(Level.DEBUG, "Creates table result [tableName={0}, isSuccess={1}]",
+            LOGGER.log(Level.DEBUG, "Creates table result [tableName={}, isSuccess={}]",
                     createTableResult.getName(), createTableResult.isSuccess());
         }
     }
@@ -388,7 +389,7 @@ public class InitService {
             final String tagTitle = tagTitle1.trim();
             final JSONObject tag = new JSONObject();
 
-            LOGGER.log(Level.TRACE, "Found a new tag[title={0}] in article[title={1}]", tagTitle, article.optString(Article.ARTICLE_TITLE));
+            LOGGER.log(Level.TRACE, "Found a new tag[title={}] in article[title={}]", tagTitle, article.optString(Article.ARTICLE_TITLE));
             tag.put(Tag.TAG_TITLE, tagTitle);
             final String tagId = tagRepository.add(tag);
             tag.put(Keys.OBJECT_ID, tagId);
@@ -470,6 +471,48 @@ public class InitService {
      */
     private void initOptions(final JSONObject requestJSONObject) throws Exception {
         LOGGER.debug("Initializing preference....");
+
+        final JSONObject IMADAOMOpt = new JSONObject();
+        IMADAOMOpt.put(Keys.OBJECT_ID, Option.ID_C_IMADAOM);
+        IMADAOMOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        IMADAOMOpt.put(Option.OPTION_VALUE, "false");
+        optionRepository.add(IMADAOMOpt);
+
+        final JSONObject chinesePunctOpt = new JSONObject();
+        chinesePunctOpt.put(Keys.OBJECT_ID, Option.ID_C_CHINESE_PUNCT);
+        chinesePunctOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        chinesePunctOpt.put(Option.OPTION_VALUE, "true");
+        optionRepository.add(chinesePunctOpt);
+
+        final JSONObject fixTermTypoOpt = new JSONObject();
+        fixTermTypoOpt.put(Keys.OBJECT_ID, Option.ID_C_FIX_TERM_TYPO);
+        fixTermTypoOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        fixTermTypoOpt.put(Option.OPTION_VALUE, "true");
+        optionRepository.add(fixTermTypoOpt);
+
+        final JSONObject autoSpaceOpt = new JSONObject();
+        autoSpaceOpt.put(Keys.OBJECT_ID, Option.ID_C_AUTO_SPACE);
+        autoSpaceOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        autoSpaceOpt.put(Option.OPTION_VALUE, "true");
+        optionRepository.add(autoSpaceOpt);
+
+        final JSONObject showToCOpt = new JSONObject();
+        showToCOpt.put(Keys.OBJECT_ID, Option.ID_C_SHOW_TOC);
+        showToCOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        showToCOpt.put(Option.OPTION_VALUE, "false");
+        optionRepository.add(showToCOpt);
+
+        final JSONObject footnotesOpt = new JSONObject();
+        footnotesOpt.put(Keys.OBJECT_ID, Option.ID_C_FOOTNOTES);
+        footnotesOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        footnotesOpt.put(Option.OPTION_VALUE, "true");
+        optionRepository.add(footnotesOpt);
+
+        final JSONObject showCodeBlockLnOpt = new JSONObject();
+        showCodeBlockLnOpt.put(Keys.OBJECT_ID, Option.ID_C_SHOW_CODE_BLOCK_LN);
+        showCodeBlockLnOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_PREFERENCE);
+        showCodeBlockLnOpt.put(Option.OPTION_VALUE, DefaultPreference.DEFAULT_SHOW_CODE_BLOCK_LN);
+        optionRepository.add(showCodeBlockLnOpt);
 
         final JSONObject hljsThemeOpt = new JSONObject();
         hljsThemeOpt.put(Keys.OBJECT_ID, Option.ID_C_HLJS_THEME);

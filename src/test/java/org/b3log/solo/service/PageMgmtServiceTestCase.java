@@ -34,19 +34,10 @@ import org.testng.annotations.Test;
 public class PageMgmtServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Add Page.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addPage() throws Exception {
         final PageMgmtService pageMgmtService = getPageMgmtService();
 
@@ -68,7 +59,6 @@ public class PageMgmtServiceTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void removePage() throws Exception {
         final PageMgmtService pageMgmtService = getPageMgmtService();
 
@@ -100,7 +90,6 @@ public class PageMgmtServiceTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void updatePage() throws Exception {
         final PageMgmtService pageMgmtService = getPageMgmtService();
 

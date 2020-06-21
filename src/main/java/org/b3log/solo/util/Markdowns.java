@@ -27,10 +27,11 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.util.Callstacks;
 import org.b3log.latke.util.Stopwatchs;
@@ -47,6 +48,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -58,7 +60,7 @@ import java.util.concurrent.*;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.1.10, Sep 23, 2019
+ * @version 2.3.1.15, Jan 25, 2020
  * @since 0.4.5
  */
 public final class Markdowns {
@@ -66,7 +68,7 @@ public final class Markdowns {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Markdowns.class);
+    private static final Logger LOGGER = LogManager.getLogger(Markdowns.class);
 
     /**
      * Markdown cache.
@@ -109,6 +111,21 @@ public final class Markdowns {
      * Whether Lute is available.
      */
     public static boolean LUTE_AVAILABLE;
+
+    public static boolean SHOW_CODE_BLOCK_LN = false;
+    public static boolean FOOTNOTES = false;
+    public static boolean SHOW_TOC = false;
+    public static boolean AUTO_SPACE = false;
+    public static boolean FIX_TERM_TYPO = false;
+    public static boolean CHINESE_PUNCT = false;
+    public static boolean IMADAOM = false;
+
+    /**
+     * Clears cache.
+     */
+    public static void clearCache() {
+        MD_CACHE.clear();
+    }
 
     /**
      * Cleans the specified HTML.
@@ -162,10 +179,6 @@ public final class Markdowns {
 
             if (StringUtils.isBlank(html)) {
                 html = toHtmlByFlexmark(markdownText);
-            }
-
-            if (!StringUtils.startsWith(html, "<p>")) {
-                html = "<p>" + html + "</p>";
             }
 
             final Document doc = Jsoup.parse(html);
@@ -260,8 +273,15 @@ public final class Markdowns {
     private static String toHtmlByLute(final String markdownText) throws Exception {
         final URL url = new URL(LUTE_ENGINE_URL);
         final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("X-CodeSyntaxHighlightLineNum", String.valueOf(Markdowns.SHOW_CODE_BLOCK_LN));
+        conn.setRequestProperty("X-Footnotes", String.valueOf(Markdowns.FOOTNOTES));
+        conn.setRequestProperty("X-ToC", String.valueOf(Markdowns.SHOW_TOC));
+        conn.setRequestProperty("X-AutoSpace", String.valueOf(Markdowns.AUTO_SPACE));
+        conn.setRequestProperty("X-FixTermTypo", String.valueOf(Markdowns.FIX_TERM_TYPO));
+        conn.setRequestProperty("X-ChinesePunct", String.valueOf(Markdowns.CHINESE_PUNCT));
+        conn.setRequestProperty("X-IMADAOM", String.valueOf(Markdowns.IMADAOM));
         conn.setConnectTimeout(100);
-        conn.setReadTimeout(1000);
+        conn.setReadTimeout(3000);
         conn.setDoOutput(true);
 
         try (final OutputStream outputStream = conn.getOutputStream()) {
@@ -270,7 +290,7 @@ public final class Markdowns {
 
         String ret;
         try (final InputStream inputStream = conn.getInputStream()) {
-            ret = IOUtils.toString(inputStream, "UTF-8");
+            ret = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         }
 
         conn.disconnect();

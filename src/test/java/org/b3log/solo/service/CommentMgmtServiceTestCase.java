@@ -39,19 +39,10 @@ import java.util.List;
 public class CommentMgmtServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Add Article Comment.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void addArticleComment() throws Exception {
         final ArticleQueryService articleQueryService = getArticleQueryService();
 

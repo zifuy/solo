@@ -17,19 +17,19 @@
  */
 package org.b3log.solo.service;
 
-import junit.framework.Assert;
 import org.b3log.latke.model.User;
 import org.b3log.solo.AbstractTestCase;
 import org.b3log.solo.util.Solos;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * {@link UserQueryService} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://github.com/nanolikeyou">nanolikeyou</a>
+ * @author <a href="https://hacpai.com/member/nanolikeyou">nanolikeyou</a>
  * @version 1.0.0.3, Feb 11, 2019
  */
 @Test(suiteName = "service")
@@ -87,7 +87,7 @@ public class UserQueryServiceTestCase extends AbstractTestCase {
         final JSONObject paginationRequest = Solos.buildPaginationRequest("1/20/10");
         final JSONObject result = userQueryService.getUsers(paginationRequest);
         final JSONArray users = result.getJSONArray(User.USERS);
-        Assert.assertEquals(1, users.length());
+        Assert.assertEquals(users.length(), 2);
     }
 
     /**

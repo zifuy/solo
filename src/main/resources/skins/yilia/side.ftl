@@ -27,7 +27,7 @@
     </div>
     <header class="content fn__flex-1">
         <a href="${servePath}">
-            <img class="avatar" src="${adminUser.userAvatar}" title="${userName}"/>
+            <img class="avatar" src="${adminUser.userAvatar}" title="${userName}" alt="${userName}"/>
         </a>
         <hgroup>
             <h1>
@@ -42,14 +42,10 @@
                 <#list pageNavigations as page>
                     <li>
                         <a href="${page.pagePermalink}" target="${page.pageOpenTarget}"><#if page.pageIcon != ''><img
-                                class="page-icon" src="${page.pageIcon}"></#if>${page.pageTitle}</a>
+                                class="page-icon" src="${page.pageIcon}" alt="${page.pageTitle}"></#if>${page.pageTitle}</a>
                     </li>
                 </#list>
                 <li>
-                    <#if commentable>
-                        <a href="${servePath}/dynamic.html">${dynamicLabel}</a>
-                        &nbsp; &nbsp;
-                    </#if>
                     <a href="${servePath}/tags.html">${allTagsLabel}</a>
                     &nbsp; &nbsp;
                     <a href="${servePath}/archives.html">${archiveLabel}</a>

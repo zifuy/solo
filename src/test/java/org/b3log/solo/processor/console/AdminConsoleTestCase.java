@@ -35,17 +35,8 @@ import org.testng.annotations.Test;
 public class AdminConsoleTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * showAdminIndex.
      */
-    @Test(dependsOnMethods = "init")
     public void showAdminIndex() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/admin-index.do");
@@ -61,7 +52,6 @@ public class AdminConsoleTestCase extends AbstractTestCase {
     /**
      * showAdminFunctions.
      */
-    @Test(dependsOnMethods = "init")
     public void showAdminFunctions() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/admin-article.do");
@@ -77,7 +67,6 @@ public class AdminConsoleTestCase extends AbstractTestCase {
     /**
      * showAdminPreferenceFunction.
      */
-    @Test(dependsOnMethods = "init")
     public void showAdminPreferenceFunction() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/admin-preference.do");
@@ -93,7 +82,6 @@ public class AdminConsoleTestCase extends AbstractTestCase {
     /**
      * exportSQL.
      */
-    @Test(dependsOnMethods = "init")
     public void exportSQL() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/export/sql");
@@ -109,7 +97,6 @@ public class AdminConsoleTestCase extends AbstractTestCase {
     /**
      * exportJSON.
      */
-    @Test(dependsOnMethods = "init")
     public void exportJSON() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/export/json");
@@ -125,7 +112,6 @@ public class AdminConsoleTestCase extends AbstractTestCase {
     /**
      * exportHexo.
      */
-    @Test(dependsOnMethods = "init")
     public void exportHexo() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/console/export/hexo");

@@ -64,9 +64,7 @@
             </#if>
             with <span data-uvstaturl="${servePath}${article.articlePermalink}">${article.articleViewCount}</span> views
             <#if commentable>
-            <#if article.articleCommentCount != 0>
-                and <a href="#comments">${article.articleCommentCount} comments</a>
-            </#if>
+                and <a href="#b3logsolocomments"><span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span> comments</a>
             </#if>
         </div>
         <div class="item__tags">
@@ -92,7 +90,15 @@
     </div>
     <div class="body--gray post__gray">
         <div class="wrapper comment">
-            <@comments commentList=articleComments article=article></@comments>
+            <#if commentable>
+                <div id="b3logsolocomments"></div>
+                <div id="vcomment" style="padding: 30px 0;" data-name="${article.authorName}" data-postId="${article.oId}"></div>
+                <#if !staticSite>
+                    <div id="soloComments" style="display: none;">
+                        <@comments commentList=articleComments article=article></@comments>
+                    </div>
+                </#if>
+            </#if>
 
             <div class="post__list fn__flex">
                 <div class="fn__flex-1">
@@ -120,7 +126,10 @@
                       data-title="${article.articleTitle}"
                       data-blogtitle="${blogTitle}"
                       data-url="${servePath}${article.articlePermalink}"
-                      data-avatar="${article.authorThumbnailURL}">WeChat</span>
+                      data-avatar="${article.authorThumbnailURL}">
+                    WeChat
+                    <span class="qrcode"></span>
+                </span>
             </span>
             <span class="post__arrow">
                 <#if previousArticlePermalink??>

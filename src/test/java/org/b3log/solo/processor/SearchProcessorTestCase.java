@@ -35,17 +35,8 @@ import org.testng.annotations.Test;
 public class SearchProcessorTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * showOpensearchXML.
      */
-    @Test(dependsOnMethods = "init")
     public void showOpensearchXML() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/opensearch.xml");
@@ -59,7 +50,6 @@ public class SearchProcessorTestCase extends AbstractTestCase {
     /**
      * search.
      */
-    @Test(dependsOnMethods = "init")
     public void search() {
         final MockRequest request = mockRequest();
         request.setRequestURI("/search");

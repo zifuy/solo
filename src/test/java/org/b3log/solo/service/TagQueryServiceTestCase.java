@@ -35,19 +35,10 @@ import java.util.List;
 public class TagQueryServiceTestCase extends AbstractTestCase {
 
     /**
-     * Init.
-     */
-    @Test
-    public void init() {
-        super.init();
-    }
-
-    /**
      * Get Tags.
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getTags() throws Exception {
         final TagQueryService tagQueryService = getTagQueryService();
 
@@ -62,7 +53,6 @@ public class TagQueryServiceTestCase extends AbstractTestCase {
      *
      * @throws Exception exception
      */
-    @Test(dependsOnMethods = "init")
     public void getTagByTitle() throws Exception {
         final TagQueryService tagQueryService = getTagQueryService();
 

@@ -21,7 +21,7 @@
 <#list articles as article>
     <article class="item<#if article_index % 6 ==0> item--large</#if>">
         <a href="${servePath}${article.articlePermalink}" class="item__cover"
-           style="background-image: url(${article.articleImg1URL})">
+           style="background-image: url(${article.articleImg1URL})"> ${article.articleTitle}
         </a>
         <div class="item__main">
             <#list article.articleTags?split(",") as articleTag>
@@ -66,17 +66,16 @@
                 <a href="${servePath}/authors/${article.authorId}"
                    aria-label="${article.authorName}"
                    class="vditor-tooltipped vditor-tooltipped__n item__avatar">
-                    <img src="${article.authorThumbnailURL}" />
+                    <img src="${article.authorThumbnailURL}" alt="${article.authorId}"/>
                 </a>
-                <#if article.articleCommentCount != 0 && commentable>
-                <a class="item__meta" href="${servePath}${article.articlePermalink}#comments">
-                    ${article.articleCommentCount} ${commentLabel}
+                <#if commentable>
+                <a class="item__meta fn__none" href="${servePath}${article.articlePermalink}#b3logsolocomments">
+                    <span data-uvstatcmt="${article.oId}">${article.articleCommentCount}</span> ${commentLabel}
                 </a>
-                <#else>
-                    <a class="item__meta" href="${servePath}${article.articlePermalink}">
-                        <span data-uvstaturl="${servePath}${article.articlePermalink}">${article.articleViewCount}</span> ${viewLabel}
-                    </a>
                 </#if>
+                <a class="item__meta" href="${servePath}${article.articlePermalink}">
+                    <span data-uvstaturl="${servePath}${article.articlePermalink}">${article.articleViewCount}</span> ${viewLabel}
+                </a>
             </div>
         </div>
     </article>
